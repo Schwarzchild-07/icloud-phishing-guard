@@ -1,0 +1,26 @@
+name: iCloud 24/7 Phishing Guard
+
+on:
+  schedule:
+    # 20分おきに自動巡回（無料枠内で余裕で収まります）
+    - cron: '*/20 * * * *'
+  workflow_dispatch: # 手動で即座に実行するボタン
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Cloud Phishing Guard
+        env:
+          ICLOUD_EMAIL: ${{ secrets.ICLOUD_EMAIL }}
+          ICLOUD_APP_PASSWORD: ${{ secrets.ICLOUD_APP_PASSWORD }}
+        run: |
+          python cloud_guard.py
